@@ -1,0 +1,111 @@
+﻿@model GenerateModelInput
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    #classModel {
+        background-color: #1e1e1e; /* Warna latar seperti Visual Studio */
+        color: #dcdcdc; /* Warna teks */
+        font-family: Consolas, "Courier New", monospace; /* Font monospace seperti di C# */
+        padding: 15px;
+        border-radius: 5px;
+        white-space: pre-line; /* Agar <br> tetap bekerja */
+        border: 1px solid #3c3c3c;
+        overflow-x: auto; /* Tambahkan scroll jika kode panjang */
+    }
+
+    /* Warna-warna seperti di editor C# */
+    .keyword {
+        color: #569cd6;
+    }
+
+    .type {
+        color: #4ec9b0;
+    }
+
+    .property {
+        color: #9cdcfe;
+    }
+</style>
+
+
+
+
+@if (Model.Pesan != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Pesan
+    </div>
+}
+
+<form>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Database</label>
+        <select asp-for="DatabaseSelected" class="form-select" aria-label="Default select example">
+            @foreach (var item in Model.ListDatabase)
+            {
+                <option value="@item.ToString()">@item.ToString()</option>
+            }
+        </select>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4 mt-4">
+            <label for="exampleFormControlTextarea1" class="form-label">Structure Table</label>
+            <br />
+            <label class="form-label">
+                <b>Example for SQL Server :</b>
+                <br />
+                [Name] [nvarchar](70) NULL,
+                <br />
+                [Born] [datetime] NULL,
+                <br />
+                [Region] [nvarchar](10) NULL,
+            </label>
+            <textarea asp-for="Input" class="form-control mt-2" id="exampleFormControlTextarea1" rows="20" required></textarea>
+           
+        </div>
+        <div class="col-md-3 mt-4">
+            <button type="submit" class="btn btn-danger mt-2">Execute</button>
+            <br />
+            <br />
+            <b>Column Descriptions</b>
+            <br />
+            <br />
+            @Html.Raw(Model.OutputColumn)
+        </div>
+        <div class="col-md-5 mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <b>Class Model</b>
+                <button class="btn btn-sm btn-outline-primary" onclick="copyText()">Copy</button>
+            </div>
+
+            <hr />
+
+            <div id="classModel">
+                @Html.Raw(Model.OutputClassModel)
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+<!-- Prism.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+
+
+<script>
+    function copyText() {
+        var text = document.getElementById("classModel").innerText; // Ambil teks dari div
+        navigator.clipboard.writeText(text).then(function() {
+           
+        }).catch(function(err) {
+            console.error("Failed to copy: ", err);
+        });
+    }
+</script>
+
+
